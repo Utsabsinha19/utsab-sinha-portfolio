@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useMotionTemplate,
+} from "framer-motion";
 
 interface Tilt3DCardProps {
   children: React.ReactNode;
@@ -14,9 +20,9 @@ interface Tilt3DCardProps {
 export default function Tilt3DCard({
   children,
   className = "",
-  maxTilt = 8,
+  maxTilt = 6,
   perspective = 1000,
-  glowColor = "rgba(34, 211, 238, 0.15)",
+  glowColor = "rgba(99, 102, 241, 0.18)",
 }: Tilt3DCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
@@ -24,34 +30,32 @@ export default function Tilt3DCard({
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
 
-  const rotateXSpring = useSpring(useTransform(mouseY, [0, 1], [maxTilt, -maxTilt]), {
-    stiffness: 300,
-    damping: 30,
-  });
-  const rotateYSpring = useSpring(useTransform(mouseX, [0, 1], [-maxTilt, maxTilt]), {
-    stiffness: 300,
-    damping: 30,
-  });
+  const rotateXSpring = useSpring(
+    useTransform(mouseY, [0, 1], [maxTilt, -maxTilt]),
+    { stiffness: 320, damping: 28 }
+  );
+  const rotateYSpring = useSpring(
+    useTransform(mouseX, [0, 1], [-maxTilt, maxTilt]),
+    { stiffness: 320, damping: 28 }
+  );
 
-  const spotlightX = useTransform(mouseX, [0, 1], ["0%", "100%"]);
-  const spotlightY = useTransform(mouseY, [0, 1], ["0%", "100%"]);
+  const spotlightXPercent = useTransform(mouseX, (x) => `${Math.round(x * 100)}%`);
+  const spotlightYPercent = useTransform(mouseY, (y) => `${Math.round(y * 100)}%`);
+  const spotlightBg = useMotionTemplate`radial-gradient(550px circle at ${spotlightXPercent} ${spotlightYPercent}, ${glowColor}, transparent 55%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const x = (e.clientX - rect.left) / width;
-    const y = (e.clientY - rect.top) / height;
+    if (rect.width === 0 || rect.height === 0) return;
+
+    const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+    const y = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
 
     mouseX.set(x);
     mouseY.set(y);
   };
 
-  const handleMouseEnter = () => {
-    setHovered(true);
-  };
-
+  const handleMouseEnter = () => setHovered(true);
   const handleMouseLeave = () => {
     setHovered(false);
     mouseX.set(0.5);
@@ -59,10 +63,7 @@ export default function Tilt3DCard({
   };
 
   return (
-    <div
-      style={{ perspective: `${perspective}px` }}
-      className="w-full"
-    >
+    <div style={{ perspective: `${perspective}px` }} className="w-full">
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -75,12 +76,12 @@ export default function Tilt3DCard({
         }}
         className={`relative transition-shadow duration-300 ${className}`}
       >
-        {/* Dynamic 3D Spotlight Shimmer */}
+        {/* Real-time Dynamic 3D Spotlight Shimmer */}
         <motion.div
-          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-500 z-30"
+          className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300 z-30"
           style={{
             opacity: hovered ? 1 : 0,
-            background: `radial-gradient(600px circle at ${spotlightX.get()} ${spotlightY.get()}, ${glowColor}, transparent 40%)`,
+            background: spotlightBg,
           }}
         />
         <div style={{ transform: "translateZ(0px)" }}>{children}</div>

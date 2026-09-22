@@ -22,9 +22,9 @@ function CSSFallback() {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
       <div className="absolute w-[70%] aspect-square rounded-full bg-primary-gradient opacity-20 blur-3xl" />
-      <div className="absolute w-[55%] aspect-square rounded-full border border-cyan-500/20" />
-      <div className="absolute w-[75%] aspect-square rounded-full border border-violet-500/15" />
-      <div className="absolute w-[95%] aspect-square rounded-full border border-pink-500/10" />
+      <div className="absolute w-[55%] aspect-square rounded-full border border-amber-500/25" />
+      <div className="absolute w-[75%] aspect-square rounded-full border border-orange-500/20" />
+      <div className="absolute w-[95%] aspect-square rounded-full border border-yellow-500/15" />
       <div className="relative w-[45%] aspect-square rounded-full bg-[var(--surface-elevated)] border border-[var(--border)] flex items-center justify-center overflow-hidden shadow-lg">
         <div className="absolute inset-0 bg-primary-gradient opacity-20 blur-2xl" />
         <div className="relative text-center">
@@ -73,21 +73,21 @@ export default function Hero() {
           className="absolute top-[10%] left-[50%] -translate-x-1/2 w-[900px] h-[900px] rounded-full opacity-60 dark:opacity-100"
           style={{
             background:
-              "radial-gradient(circle, rgba(34,211,238,0.15), rgba(34,211,238,0.05) 40%, transparent 70%)",
+              "radial-gradient(circle, rgba(245,158,11,0.16), rgba(251,191,36,0.06) 40%, transparent 70%)",
           }}
         />
         <div
           className="absolute top-[30%] right-[-10%] w-[600px] h-[600px] rounded-full opacity-50 dark:opacity-100"
           style={{
             background:
-              "radial-gradient(circle, rgba(139,92,246,0.18), transparent 70%)",
+              "radial-gradient(circle, rgba(249,115,22,0.14), transparent 70%)",
           }}
         />
         <div
           className="absolute bottom-[0%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-40 dark:opacity-100"
           style={{
             background:
-              "radial-gradient(circle, rgba(236,72,153,0.12), transparent 70%)",
+              "radial-gradient(circle, rgba(234,179,8,0.10), transparent 70%)",
           }}
         />
       </div>
@@ -111,7 +111,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[38px] sm:text-[54px] md:text-[68px] lg:text-[84px] xl:text-[96px] font-semibold leading-[0.96] tracking-[-0.035em] mb-8 text-[var(--ink)]"
+              className="fluid-heading-hero font-semibold mb-6 text-[var(--ink)]"
             >
               I BUILD
               <br />
@@ -124,7 +124,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.45 }}
-              className="text-base md:text-lg text-[var(--ink-2)] max-w-xl leading-relaxed mb-10"
+              className="text-base md:text-lg text-[var(--ink-2)] max-w-xl leading-relaxed mb-8"
             >
               Building end-to-end AI/ML systems — from NLP social ingestion pipelines processing 10,000+ posts per run to real-time CNN biometric authentication with sub-100ms inference latency.
             </motion.p>

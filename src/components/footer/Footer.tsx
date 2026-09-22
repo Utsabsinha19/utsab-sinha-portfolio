@@ -62,7 +62,7 @@ export default function Footer() {
                 href={`mailto:${profile.email}`}
                 className="flex items-center gap-3 text-sm text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors group"
               >
-                <Mail size={14} className="text-cyan-500" />
+                <Mail size={14} className="text-[var(--color-gold-accent)]" />
                 <span className="font-mono">{profile.email}</span>
               </a>
               <a

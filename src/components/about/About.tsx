@@ -46,12 +46,12 @@ export default function About() {
         {/* Section Header */}
         <div className="mb-16 md:mb-20">
           <div className="eyebrow mb-4 flex items-center gap-2">
-            <Sparkles size={16} className="text-cyan-500" />
+            <Sparkles size={16} className="text-[var(--color-gold-accent)]" />
             <span className="text-primary-gradient font-semibold">
               — 07 · ABOUT ME & PROFILE
             </span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-[-0.03em] leading-[0.95] text-[var(--ink)]">
+          <h2 className="fluid-heading-section font-semibold tracking-[-0.03em] text-[var(--ink)]">
             ARCHITECTING <span className="text-primary-gradient">AI SYSTEMS.</span>
           </h2>
         </div>
@@ -59,10 +59,10 @@ export default function About() {
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column: Profile Picture Card & Key Badges */}
           <div className="lg:col-span-5 space-y-6">
-            <Tilt3DCard maxTilt={6} glowColor="rgba(34, 211, 238, 0.2)">
+            <Tilt3DCard maxTilt={6} glowColor="rgba(245, 158, 11, 0.2)">
               <div className="relative rounded-3xl glass-card p-4 md:p-6 overflow-hidden">
                 {/* Profile Picture Frame */}
-                <div className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden border border-[var(--border-accent)] bg-[var(--surface-elevated)] group shadow-[0_0_30px_rgba(34,211,238,0.15)]">
+                <div className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden border border-[var(--border-accent)] bg-[var(--surface-elevated)] group shadow-[0_0_30px_rgba(245,158,11,0.15)]">
                   <Image
                     src="/utsab_profile.jpg"
                     alt="Utsab Sinha - AI/ML Engineer"
@@ -75,8 +75,8 @@ export default function About() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-transparent to-black/20 opacity-70" />
 
                   {/* Corner Accent Dots */}
-                  <div className="absolute top-3 left-3 w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22D3EE]" />
-                  <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-violet-400 shadow-[0_0_10px_#8B5CF6]" />
+                  <div className="absolute top-3 left-3 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_10px_#F59E0B]" />
+                  <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-orange-400 shadow-[0_0_10px_#F97316]" />
 
                   {/* Availability Badge Overlay */}
                   <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl backdrop-blur-md bg-[var(--surface)]/90 border border-[var(--border)] shadow-md">
@@ -87,7 +87,7 @@ export default function About() {
                       </span>
                     </div>
                     <div className="text-[11px] font-mono text-[var(--ink-2)] mt-1 flex items-center gap-1.5">
-                      <MapPin size={12} className="text-cyan-500" />
+                      <MapPin size={12} className="text-[var(--color-orange-accent)]" />
                       <span>Kolkata, WB / Jaipur, RJ</span>
                     </div>
                   </div>
@@ -97,11 +97,11 @@ export default function About() {
                 <div className="mt-6 space-y-3">
                   <div className="flex items-center justify-between text-xs font-mono border-b border-[var(--border)] pb-3">
                     <span className="text-[var(--ink-3)]">CGPA (B.Tech CSE)</span>
-                    <span className="font-semibold text-cyan-500">8.29 / 10.0</span>
+                    <span className="font-semibold text-[var(--color-gold-accent)]">8.29 / 10.0</span>
                   </div>
                   <div className="flex items-center justify-between text-xs font-mono border-b border-[var(--border)] pb-3">
                     <span className="text-[var(--ink-3)]">SGPA (UEM Jaipur)</span>
-                    <span className="font-semibold text-violet-400">8.17 / 10.0</span>
+                    <span className="font-semibold text-[var(--color-orange-accent)]">8.17 / 10.0</span>
                   </div>
                   <div className="flex items-center justify-between text-xs font-mono">
                     <span className="text-[var(--ink-3)]">Focus Areas</span>
@@ -173,7 +173,7 @@ export default function About() {
             {/* Education Cards */}
             <div>
               <div className="eyebrow mb-4 flex items-center gap-2">
-                <GraduationCap size={16} className="text-cyan-500" /> Academic Journey
+                <GraduationCap size={16} className="text-[var(--color-gold-accent)]" /> Academic Journey
               </div>
               <div className="space-y-3">
                 {education.map((edu, idx) => (
@@ -181,7 +181,7 @@ export default function About() {
                     <div className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] shadow-xs">
                       <div className="flex items-center justify-between text-xs font-mono text-[var(--ink-3)]">
                         <span>{edu.period}</span>
-                        <span className="text-cyan-500 font-semibold">{edu.score}</span>
+                        <span className="text-[var(--color-gold-accent)] font-semibold">{edu.score}</span>
                       </div>
                       <h4 className="font-semibold text-sm text-[var(--ink)] mt-1">
                         {edu.degree}
@@ -221,14 +221,14 @@ export default function About() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[var(--border)]">
                 <div>
                   <div className="eyebrow flex items-center gap-2">
-                    <Cpu size={15} className="text-cyan-500" /> TECHNICAL MATRIX & TOOLKIT
+                    <Cpu size={15} className="text-[var(--color-gold-accent)]" /> TECHNICAL MATRIX & TOOLKIT
                   </div>
                   <div className="mt-1 text-xs text-[var(--ink-3)]">
                     Structured breakdown of core competencies, models, and tools.
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-mono text-[var(--ink-3)]">
-                  <Layers size={13} className="text-violet-400" />
+                  <Layers size={13} className="text-[var(--color-orange-accent)]" />
                   <span>5 CORE DOMAINS</span>
                 </div>
               </div>
@@ -248,14 +248,14 @@ export default function About() {
                       }}
                       className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 cursor-pointer ${
                         isSelected
-                          ? "font-semibold shadow-sm text-white"
+                          ? "font-semibold shadow-sm text-black"
                           : "text-[var(--ink-2)] border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-elevated)]"
                       }`}
                       style={
                         isSelected
                           ? {
-                              background: theme.accent,
-                              borderColor: theme.accent,
+                              background: "linear-gradient(135deg, #FBBF24, #F59E0B)",
+                              borderColor: "#F59E0B",
                             }
                           : {}
                       }
@@ -295,7 +295,7 @@ export default function About() {
                             onClick={() => setActiveSkill(isSelected ? null : item)}
                             className={`p-3 rounded-lg border text-left text-xs font-mono transition-all duration-200 cursor-pointer ${
                               isSelected
-                                ? "border-cyan-500 bg-cyan-500/10 text-cyan-400 font-semibold shadow-xs"
+                                ? "border-amber-500 bg-amber-500/10 text-[var(--color-gold-accent)] font-semibold shadow-xs"
                                 : "border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--ink-2)] hover:border-[var(--border-accent)] hover:text-[var(--ink)]"
                             }`}
                           >
@@ -313,12 +313,12 @@ export default function About() {
                     <motion.div
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-3.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-xs text-[var(--ink-2)] flex items-center justify-between"
+                      className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs text-[var(--ink-2)] flex items-center justify-between"
                     >
                       <div>
-                        <span className="font-mono text-white font-semibold">{activeSkill}</span> — active component in Utsab Sinha&apos;s AI/ML development workflow.
+                        <span className="font-mono text-[var(--ink)] font-semibold">{activeSkill}</span> — active component in Utsab Sinha&apos;s AI/ML development workflow.
                       </div>
-                      <span className="text-[10px] font-mono text-cyan-400 font-semibold uppercase tracking-wider ml-2">VERIFIED</span>
+                      <span className="text-[10px] font-mono text-[var(--color-orange-accent)] font-semibold uppercase tracking-wider ml-2">VERIFIED</span>
                     </motion.div>
                   )}
                 </motion.div>

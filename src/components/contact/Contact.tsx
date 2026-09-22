@@ -2,76 +2,117 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Mail, Globe, Code2, Send, Phone, MapPin, Sparkles } from "lucide-react";
+import {
+  ArrowUpRight,
+  Mail,
+  Globe,
+  Code2,
+  Send,
+  Phone,
+  MapPin,
+  Sparkles,
+  Copy,
+  Check,
+} from "lucide-react";
 import { profile } from "@/lib/data";
 import Tilt3DCard from "@/components/ui/Tilt3DCard";
+import { sendContactMessage } from "@/app/actions/contact";
 
-type FormState = {
+type FormState = "idle" | "submitting" | "success" | "error";
+
+type FormData = {
   name: string;
   email: string;
   message: string;
 };
 
-type Errors = Partial<Record<keyof FormState, string>>;
-
 export default function Contact() {
-  const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
-  const [errors, setErrors] = useState<Errors>({});
-  const [submitted, setSubmitted] = useState<"idle" | "success" | "error">("idle");
+  const [form, setForm] = useState<FormData>({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+  const [submitted, setSubmitted] = useState<FormState>("idle");
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  const validate = () => {
-    const e: Errors = {};
-    if (!form.name.trim()) e.name = "Please enter your name";
-    if (!form.email.trim()) e.email = "Please enter your email";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      e.email = "Please enter a valid email";
-    if (!form.message.trim() || form.message.trim().length < 10)
-      e.message = "Please write at least 10 characters";
-    return e;
+  const copyToClipboard = (text: string, key: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const submit = (ev: React.FormEvent) => {
-    ev.preventDefault();
-    const e = validate();
-    setErrors(e);
-    if (Object.keys(e).length > 0) return;
-    setSubmitted("success");
-    setForm({ name: "", email: "", message: "" });
-    setTimeout(() => setSubmitted("idle"), 4000);
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({});
+    setSubmitted("submitting");
+
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("message", form.message);
+    formData.append("honeypot", "");
+
+    const result = await sendContactMessage(submitted, formData);
+
+    if ("errors" in result && result.errors) {
+      const fieldErrors: { name?: string; email?: string; message?: string } = {};
+      if (result.errors.name?.[0]) fieldErrors.name = result.errors.name[0];
+      if (result.errors.email?.[0]) fieldErrors.email = result.errors.email[0];
+      if (result.errors.message?.[0]) fieldErrors.message = result.errors.message[0];
+      setErrors(fieldErrors);
+      setSubmitted("error");
+      return;
+    }
+
+    if (result.success) {
+      setForm({ name: "", email: "", message: "" });
+      setSubmitted("success");
+      const timer = setTimeout(() => setSubmitted("idle"), 5000);
+      return () => clearTimeout(timer);
+    }
+
+    setSubmitted("error");
   };
 
   const contactLinks = [
     {
+      id: "email",
       label: "EMAIL",
       value: profile.email,
       href: `mailto:${profile.email}`,
       icon: <Mail size={16} />,
-      accent: "cyan",
-      badgeColor: "bg-cyan-500/10 border-cyan-500/30 text-cyan-500",
+      badgeColor: "bg-sky-500/10 border-sky-500/30 text-sky-500",
+      canCopy: true,
     },
     {
+      id: "phone",
       label: "PHONE",
       value: profile.phone,
       href: `tel:${profile.phone}`,
       icon: <Phone size={16} />,
-      accent: "emerald",
       badgeColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-500",
+      canCopy: true,
     },
     {
+      id: "linkedin",
       label: "LINKEDIN",
       value: "linkedin.com/in/utsab-sinha",
       href: profile.linkedin,
       icon: <Globe size={16} />,
-      accent: "blue",
-      badgeColor: "bg-blue-500/10 border-blue-500/30 text-blue-500",
+      badgeColor: "bg-indigo-500/10 border-indigo-500/30 text-indigo-500",
+      canCopy: false,
     },
     {
+      id: "github",
       label: "GITHUB",
       value: "github.com/Utsabsinha19",
       href: profile.github,
       icon: <Code2 size={16} />,
-      accent: "violet",
       badgeColor: "bg-violet-500/10 border-violet-500/30 text-violet-500",
+      canCopy: false,
     },
   ];
 
@@ -80,27 +121,28 @@ export default function Contact() {
       {/* Background Lighting */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[700px] rounded-full opacity-50 dark:opacity-100"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full opacity-35 dark:opacity-75 blur-3xl"
           style={{
             background:
-              "radial-gradient(circle, rgba(34,211,238,0.12), rgba(139,92,246,0.12), transparent 70%)",
+              "radial-gradient(circle, rgba(99,102,241,0.15), rgba(56,189,248,0.12), transparent 70%)",
           }}
         />
       </div>
 
       <div className="relative mx-auto max-w-[1280px] px-5 md:px-8">
         <div className="text-center max-w-4xl mx-auto mb-16">
-          <div className="eyebrow mb-4">
+          <div className="eyebrow mb-3 flex items-center justify-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-sky-accent)]" />
             <span className="text-primary-gradient font-semibold">
-              — 08 · CONTACT & COLLABORATION
+              — 08 · DIRECT COMMUNICATION & INQUIRIES
             </span>
           </div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-[-0.035em] leading-[0.95] text-[var(--ink)]"
+            transition={{ duration: 0.7 }}
+            className="fluid-heading-hero font-semibold tracking-[-0.035em] text-[var(--ink)]"
           >
             LET&apos;S BUILD
             <br />
@@ -108,21 +150,21 @@ export default function Contact() {
             <br />
             INTELLIGENT.
           </motion.h2>
-          <p className="mt-6 text-base md:text-lg text-[var(--ink-2)] max-w-xl mx-auto leading-relaxed">
-            Open to AI/ML opportunities, internships, research collaborations, and engineering ideas.
+          <p className="mt-5 text-base md:text-lg text-[var(--ink-2)] max-w-xl mx-auto leading-relaxed">
+            Open to AI/ML engineering roles, internships, research collaborations, and technical partnerships.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Direct Links */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-5 space-y-3.5">
             {contactLinks.map((link) => (
-              <Tilt3DCard key={link.label} maxTilt={4} glowColor="rgba(34,211,238,0.12)">
+              <Tilt3DCard key={link.id} maxTilt={4} glowColor="rgba(99,102,241,0.12)">
                 <a
                   href={link.href}
                   target={link.href.startsWith("http") ? "_blank" : undefined}
                   rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="group flex items-center justify-between w-full p-4 md:p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] hover:border-[var(--border-accent)] transition-all shadow-xs"
+                  className="group flex items-center justify-between w-full p-4 md:p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-elevated)] hover:border-[var(--border-accent)] transition-all shadow-sm"
                   data-cursor="OPEN"
                 >
                   <div className="flex items-center gap-4 min-w-0">
@@ -133,29 +175,46 @@ export default function Contact() {
                       <div className="text-[10px] font-mono text-[var(--ink-3)] uppercase tracking-widest">
                         {link.label}
                       </div>
-                      <div className="text-sm font-medium mt-0.5 text-[var(--ink)] truncate">
+                      <div className="text-sm font-semibold mt-0.5 text-[var(--ink)] truncate">
                         {link.value}
                       </div>
                     </div>
                   </div>
-                  <ArrowUpRight
-                    size={18}
-                    className="text-[var(--ink-3)] group-hover:text-[var(--ink)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition flex-shrink-0 ml-2"
-                  />
+
+                  <div className="flex items-center gap-2">
+                    {link.canCopy && (
+                      <button
+                        onClick={(e) => copyToClipboard(link.value, link.id, e)}
+                        title="Copy to clipboard"
+                        className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+                        data-cursor="COPY"
+                      >
+                        {copiedKey === link.id ? (
+                          <Check size={14} className="text-emerald-500" />
+                        ) : (
+                          <Copy size={14} />
+                        )}
+                      </button>
+                    )}
+                    <ArrowUpRight
+                      size={18}
+                      className="text-[var(--ink-3)] group-hover:text-[var(--ink)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition flex-shrink-0"
+                    />
+                  </div>
                 </a>
               </Tilt3DCard>
             ))}
 
             {/* Location Card */}
-            <div className="p-4 md:p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex items-center gap-4 shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-500 flex-shrink-0">
+            <div className="p-4 md:p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex items-center gap-4 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/30 flex items-center justify-center text-[var(--color-violet-accent)] flex-shrink-0">
                 <MapPin size={16} />
               </div>
               <div>
                 <div className="text-[10px] font-mono text-[var(--ink-3)] uppercase tracking-widest">
                   LOCATION
                 </div>
-                <div className="text-sm font-medium mt-0.5 text-[var(--ink)]">
+                <div className="text-sm font-semibold mt-0.5 text-[var(--ink)]">
                   {profile.location}
                 </div>
               </div>
@@ -164,16 +223,16 @@ export default function Contact() {
 
           {/* Right Column: Contact Form */}
           <div className="lg:col-span-7">
-            <Tilt3DCard maxTilt={3} glowColor="rgba(139,92,246,0.15)">
+            <Tilt3DCard maxTilt={3} glowColor="rgba(99,102,241,0.15)">
               <form
-                onSubmit={submit}
+                onSubmit={onSubmit}
                 className="rounded-2xl glass-card p-6 md:p-8"
                 noValidate
               >
                 <div className="flex items-center gap-2 mb-6 pb-4 border-b border-[var(--border)]">
-                  <Sparkles size={16} className="text-cyan-500" />
+                  <Sparkles size={16} className="text-[var(--color-sky-accent)]" />
                   <span className="text-xs font-mono text-[var(--ink-3)] uppercase tracking-widest">
-                    Direct Message Channel
+                    Direct Inquiry Dispatcher
                   </span>
                 </div>
 
@@ -202,21 +261,25 @@ export default function Contact() {
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     rows={5}
                     className={`w-full rounded-xl bg-[var(--surface)] border p-4 text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:outline-none focus:border-[var(--border-accent)] focus:ring-1 focus:ring-[var(--border-accent)] resize-none transition-colors ${
-                      errors.message ? "border-red-500/50" : "border-[var(--border)]"
+                      errors.message ? "border-rose-500/50" : "border-[var(--border)]"
                     }`}
                     placeholder="Tell me about your project, team, or opportunity..."
                   />
                   {errors.message && (
-                    <p className="mt-1 text-xs text-red-500">{errors.message}</p>
+                    <p className="mt-1 text-xs text-rose-500">{errors.message}</p>
                   )}
                 </div>
 
                 <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
                   <p className="text-[11px] font-mono text-[var(--ink-3)]">
-                    Direct contact: {profile.email}
+                    Direct: {profile.email}
                   </p>
-                  <button type="submit" className="btn-primary cursor-pointer">
-                    Send Message <Send size={14} />
+                  <button
+                    type="submit"
+                    disabled={submitted === "submitting"}
+                    className="btn-primary cursor-pointer"
+                  >
+                    {submitted === "submitting" ? "Transmitting..." : "Send Message"} <Send size={14} />
                   </button>
                 </div>
 
@@ -224,9 +287,21 @@ export default function Contact() {
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-4 p-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-sm text-emerald-600 dark:text-emerald-300"
+                    className="mt-4 p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-2"
                   >
-                    Thank you! Message captured successfully.
+                    <Check size={16} /> Thank you! Message transmitted successfully.
+                  </motion.div>
+                )}
+
+                {submitted === "error" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4 p-3.5 rounded-xl border border-rose-500/40 bg-rose-500/10 text-sm text-rose-600 dark:text-rose-400"
+                  >
+                    {errors.name || errors.email || errors.message
+                      ? "Please fix the form errors above."
+                      : "Transmission failed. Please use direct email: utsabsinha468@gmail.com"}
                   </motion.div>
                 )}
               </form>
@@ -261,11 +336,11 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`w-full rounded-xl bg-[var(--surface)] border px-4 py-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:outline-none focus:border-[var(--border-accent)] focus:ring-1 focus:ring-[var(--border-accent)] transition-colors ${
-          error ? "border-red-500/50" : "border-[var(--border)]"
+          error ? "border-rose-500/50" : "border-[var(--border)]"
         }`}
         placeholder={placeholder || label}
       />
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {error && <p className="mt-1 text-xs text-rose-500">{error}</p>}
     </div>
   );
 }

@@ -1,13 +1,17 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Sphere, Line, Torus } from "@react-three/drei";
 import * as THREE from "three";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { useReducedMotion } from "framer-motion";
 
-const DARK_COLORS = ["#22D3EE", "#3B82F6", "#8B5CF6", "#EC4899"];
-const LIGHT_COLORS = ["#3B82F6", "#06B6D4", "#6366F1", "#8B5CF6"];
+const DARK_COLORS = ["#FBBF24", "#F59E0B", "#F97316", "#EA580C", "#FEF08A"];
+const LIGHT_COLORS = ["#D97706", "#F59E0B", "#EA580C", "#CA8A04", "#B45309"];
+
+const PARTICLE_COUNT_FULL = 220;
+const PARTICLE_COUNT_REDUCED = 120;
 
 function NeuralCore({ isDark }: { isDark: boolean }) {
   const group = useRef<THREE.Group>(null!);
@@ -17,9 +21,13 @@ function NeuralCore({ isDark }: { isDark: boolean }) {
   const pointsRef = useRef<THREE.Points>(null!);
 
   const activeColors = isDark ? DARK_COLORS : LIGHT_COLORS;
+  const reducedMotion = useReducedMotion();
+
+  // Adaptive particle count based on FPS and reduced motion preference
+  const particleCount = reducedMotion ? PARTICLE_COUNT_REDUCED : PARTICLE_COUNT_FULL;
 
   const { positions, colors } = useMemo(() => {
-    const count = 220;
+    const count = particleCount;
     const radius = 1.65;
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
@@ -39,7 +47,7 @@ function NeuralCore({ isDark }: { isDark: boolean }) {
       col[i * 3 + 2] = c.b;
     }
     return { positions: pos, colors: col };
-  }, [activeColors]);
+  }, [activeColors, particleCount, reducedMotion]);
 
   const lines = useMemo(() => {
     const segs: [THREE.Vector3, THREE.Vector3][] = [];
@@ -72,14 +80,14 @@ function NeuralCore({ isDark }: { isDark: boolean }) {
   }, [positions]);
 
   useFrame((state, delta) => {
-    // Smooth time-based continuous rotation
     if (group.current) {
       group.current.rotation.y += delta * 0.22;
       group.current.rotation.x =
         Math.sin(state.clock.elapsedTime * 0.4) * 0.15;
     }
     if (inner.current) {
-      const s = 1 + Math.sin(state.clock.elapsedTime * 1.2) * 0.04;
+      const s =
+        1 + Math.sin(state.clock.elapsedTime * 1.2) * 0.04;
       inner.current.scale.setScalar(s);
     }
     if (ringRef.current) {
@@ -97,47 +105,48 @@ function NeuralCore({ isDark }: { isDark: boolean }) {
 
   return (
     <group ref={group}>
-      {/* Inner Glowing Core */}
+      {/* Inner Glowing Amber/Gold Core */}
       <Sphere ref={inner} args={[0.65, 48, 48]}>
         <meshBasicMaterial
-          color={isDark ? "#3B82F6" : "#2563EB"}
+          color={isDark ? "#F59E0B" : "#D97706"}
           transparent
-          opacity={isDark ? 0.18 : 0.14}
+          opacity={isDark ? 0.22 : 0.16}
         />
       </Sphere>
 
-      {/* Wireframe Geodesic Sphere */}
+      {/* Wireframe Geodesic Gold Sphere */}
       <Sphere args={[0.67, 32, 32]}>
         <meshBasicMaterial
-          color={isDark ? "#22D3EE" : "#0284C7"}
+          color={isDark ? "#FBBF24" : "#B45309"}
           wireframe
           transparent
-          opacity={isDark ? 0.4 : 0.3}
+          opacity={isDark ? 0.45 : 0.35}
         />
       </Sphere>
 
-      {/* Smooth Spinning Orbital Rings */}
+      {/* Smooth Spinning Solar Gold Orbital Ring 1 */}
       <Torus ref={ringRef} args={[2.0, 0.008, 16, 100]} rotation={[Math.PI / 3, 0, 0]}>
         <meshBasicMaterial
-          color={isDark ? "#22D3EE" : "#0284C7"}
+          color={isDark ? "#FBBF24" : "#D97706"}
           transparent
-          opacity={isDark ? 0.6 : 0.4}
+          opacity={isDark ? 0.65 : 0.45}
         />
       </Torus>
 
+      {/* Smooth Spinning Vivid Orange Orbital Ring 2 */}
       <Torus ref={ringRef2} args={[2.2, 0.006, 16, 100]} rotation={[-Math.PI / 4, Math.PI / 6, 0]}>
         <meshBasicMaterial
-          color={isDark ? "#8B5CF6" : "#7C3AED"}
+          color={isDark ? "#F97316" : "#EA580C"}
           transparent
-          opacity={isDark ? 0.5 : 0.35}
+          opacity={isDark ? 0.55 : 0.4}
         />
       </Torus>
 
       <Sphere args={[1.85, 32, 32]}>
         <meshBasicMaterial
-          color={isDark ? "#1E3A8A" : "#DBEAFE"}
+          color={isDark ? "#78350F" : "#FEF3C7"}
           transparent
-          opacity={isDark ? 0.06 : 0.15}
+          opacity={isDark ? 0.08 : 0.18}
           side={THREE.BackSide}
         />
       </Sphere>
@@ -147,9 +156,9 @@ function NeuralCore({ isDark }: { isDark: boolean }) {
           key={i}
           points={seg}
           color={activeColors[i % activeColors.length]}
-          lineWidth={isDark ? 0.6 : 0.75}
+          lineWidth={isDark ? 0.65 : 0.8}
           transparent
-          opacity={isDark ? 0.25 : 0.35}
+          opacity={isDark ? 0.35 : 0.45}
         />
       ))}
 
@@ -167,7 +176,7 @@ function NeuralCore({ isDark }: { isDark: boolean }) {
           />
         </bufferGeometry>
         <pointsMaterial
-          size={isDark ? 0.048 : 0.058}
+          size={isDark ? 0.05 : 0.06}
           sizeAttenuation
           vertexColors
           transparent
@@ -182,8 +191,8 @@ function NeuralCore({ isDark }: { isDark: boolean }) {
 function MouseParallax() {
   const { viewport } = useThree();
   useFrame(({ pointer, camera }) => {
-    const x = (pointer.x * viewport.width) / 10;
-    const y = (pointer.y * viewport.height) / 10;
+    const x = (pointer.x * viewport.width) / 14;
+    const y = (pointer.y * viewport.height) / 14;
     camera.position.x += (x - camera.position.x) * 0.05;
     camera.position.y += (y - camera.position.y) * 0.05;
     camera.lookAt(0, 0, 0);
@@ -201,18 +210,35 @@ export default function NeuralSphere() {
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
     >
-      <ambientLight intensity={isDark ? 0.4 : 0.7} />
+      {/* Ambient Light */}
+      <ambientLight
+        intensity={isDark ? 0.6 : 0.9}
+        color={isDark ? "#F59E0B" : "#D97706"}
+      />
+
+      {/* Main Point Light - Golden Amber */}
       <pointLight
         position={[5, 5, 5]}
-        intensity={isDark ? 0.8 : 1.2}
-        color={isDark ? "#3B82F6" : "#2563EB"}
+        intensity={isDark ? 1.4 : 1.6}
+        color={isDark ? "#FBBF24" : "#D97706"}
       />
+
+      {/* Secondary Light - Solar Orange */}
       <pointLight
         position={[-5, -2, 2]}
-        intensity={isDark ? 0.6 : 0.9}
-        color={isDark ? "#8B5CF6" : "#7C3AED"}
+        intensity={isDark ? 1.0 : 1.2}
+        color={isDark ? "#F97316" : "#EA580C"}
       />
+
+      {/* Tertiary Light for subtle rim highlight */}
+      <pointLight
+        position={[5, -3, -3]}
+        intensity={isDark ? 0.7 : 0.9}
+        color={isDark ? "#FEF08A" : "#B45309"}
+      />
+
       <MouseParallax />
+
       <NeuralCore isDark={isDark} />
     </Canvas>
   );

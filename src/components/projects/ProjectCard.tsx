@@ -27,7 +27,6 @@ export default function ProjectCard({ project, onOpen, index }: Props) {
       <Tilt3DCard maxTilt={6} glowColor={`${project.accent}25`}>
         <div
           onClick={() => onOpen(project)}
-          role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {

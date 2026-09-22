@@ -133,7 +133,7 @@ export default function Navbar() {
               className="mx-6 h-px mt-2 opacity-60"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent, rgba(34,211,238,0.5), rgba(139,92,246,0.5), rgba(236,72,153,0.4), transparent)",
+                  "linear-gradient(90deg, transparent, rgba(251,191,36,0.4), rgba(245,158,11,0.7), rgba(249,115,22,0.5), transparent)",
               }}
             />
           )}

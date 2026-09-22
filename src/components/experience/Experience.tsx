@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { experience } from "@/lib/data";
-import { ChevronDown, Briefcase, Sparkles, CheckCircle2 } from "lucide-react";
+import { ChevronDown, Briefcase, Sparkles, CheckCircle2, Award } from "lucide-react";
 import Tilt3DCard from "@/components/ui/Tilt3DCard";
 
 export default function Experience() {
@@ -24,7 +24,7 @@ export default function Experience() {
               — 06 · CHRONOLOGICAL TIMELINE
             </span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-[-0.03em] leading-[0.95] text-[var(--ink)]">
+          <h2 className="fluid-heading-section font-semibold tracking-[-0.03em] text-[var(--ink)]">
             PROFESSIONAL <span className="text-primary-gradient">JOURNEY</span>
           </h2>
           <p className="mt-4 text-base md:text-lg text-[var(--ink-2)]">
@@ -34,14 +34,14 @@ export default function Experience() {
 
         <div className="relative mt-8">
           {/* Central Vertical Line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-cyan-400 via-violet-500 to-pink-500 opacity-40" />
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-amber-400 via-orange-500 to-amber-600 opacity-50" />
 
           {/* Top PRESENT Badge */}
           <div className="relative mb-12 flex justify-start md:justify-center items-center">
-            <div className="relative z-10 flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/40 bg-[var(--surface-elevated)] backdrop-blur-md shadow-lg">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse-dot" />
-              <span className="text-xs font-mono tracking-widest text-cyan-500 font-semibold uppercase">
-                PRESENT · July 2026
+            <div className="relative z-10 flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-accent)] bg-[var(--surface-elevated)] backdrop-blur-md shadow-lg">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-amber-accent)] animate-pulse-dot" />
+              <span className="text-xs font-mono tracking-widest text-[var(--color-amber-accent)] font-semibold uppercase">
+                PRESENT · 2026
               </span>
             </div>
           </div>
@@ -119,12 +119,19 @@ export default function Experience() {
                               <div className="text-[var(--ink-2)] text-sm font-medium mt-0.5">
                                 {item.org}
                               </div>
+                              {item.badge && (
+                                <div className="mt-2">
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-[var(--color-gold-accent)] font-semibold">
+                                    <Award size={11} className="text-[var(--color-orange-accent)]" /> {item.badge}
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
                           <ChevronDown
                             size={20}
                             className={`flex-shrink-0 mt-1 text-[var(--ink-3)] transition-transform duration-300 ${
-                              isOpen ? "rotate-180 text-cyan-500" : ""
+                              isOpen ? "rotate-180 text-[var(--color-gold-accent)]" : ""
                             }`}
                           />
                         </button>
@@ -138,11 +145,40 @@ export default function Experience() {
                               transition={{ duration: 0.35, ease: "easeInOut" }}
                               className="overflow-hidden"
                             >
-                              <div className="px-5 md:px-6 pb-6 text-sm text-[var(--ink-2)] leading-relaxed border-t border-[var(--border)] pt-4">
-                                <p className="mb-3">{item.description}</p>
-                                <div className="flex items-center gap-2 text-xs font-mono text-cyan-500">
+                              <div className="px-5 md:px-6 pb-6 text-sm text-[var(--ink-2)] leading-relaxed border-t border-[var(--border)] pt-4 space-y-4">
+                                <p>{item.description}</p>
+
+                                {item.badge && (
+                                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-transparent border border-amber-500/30 text-xs font-mono text-[var(--color-gold-accent)]">
+                                    <Award size={16} className="text-[var(--color-orange-accent)] flex-shrink-0" />
+                                    <span className="font-semibold">{item.badge}</span>
+                                  </div>
+                                )}
+
+                                {item.skills && item.skills.length > 0 && (
+                                  <div>
+                                    <div className="text-[11px] font-mono text-[var(--ink-3)] uppercase tracking-wider mb-2">
+                                      Core Competencies & Skills:
+                                    </div>
+                                    <div className="flex flex-wrap gap-1.5">
+                                      {item.skills.map((skill) => (
+                                        <span
+                                          key={skill}
+                                          className="px-2.5 py-1 rounded-md text-xs font-mono border bg-[var(--surface)] text-[var(--ink)]"
+                                          style={{
+                                            borderColor: `${item.accent}35`,
+                                          }}
+                                        >
+                                          {skill}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                <div className="flex items-center gap-2 text-xs font-mono text-[var(--color-gold-accent)] pt-1">
                                   <CheckCircle2 size={13} />
-                                  <span>Verified Professional Milestone</span>
+                                  <span>Verified Milestone · Indian Institute of Technology Bombay Network</span>
                                 </div>
                               </div>
                             </motion.div>
@@ -159,7 +195,7 @@ export default function Experience() {
           {/* Bottom START Marker */}
           <div className="relative mt-16 flex justify-start md:justify-center items-center">
             <div className="relative z-10 flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] backdrop-blur-md shadow-md">
-              <Sparkles size={14} className="text-violet-500" />
+              <Sparkles size={14} className="text-[var(--color-orange-accent)]" />
               <span className="text-xs font-mono tracking-widest text-[var(--ink-3)] uppercase">
                 FOUNDATION · 2024
               </span>

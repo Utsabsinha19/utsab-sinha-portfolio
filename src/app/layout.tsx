@@ -3,6 +3,8 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import CustomCursor from "@/components/ui/CustomCursor";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import InitialLoader from "@/components/ui/InitialLoader";
+import AnimeFloatingParticles from "@/components/ui/AnimeFloatingParticles";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,21 +18,34 @@ const jbmono = JetBrains_Mono({
   display: "swap",
 });
 
+// Base URL for the portfolio - update this for your deployment
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://utsabsinha.com";
+
 export const metadata: Metadata = {
   title: "Utsab Sinha — AI/ML Developer",
   description:
-    "AI/ML developer building intelligent systems across NLP, computer vision, generative AI, data intelligence and production-ready AI engineering.",
+    "AI/ML developer building intelligent systems across NLP, computer vision, generative AI, and data intelligence.",
   openGraph: {
     title: "Utsab Sinha — AI/ML Developer",
     description:
       "AI/ML developer building intelligent systems across NLP, computer vision, generative AI, and data intelligence.",
     type: "website",
+    images: [
+      {
+        url: `${baseUrl}/api/og`,
+        width: 1200,
+        height: 630,
+        alt: "Utsab Sinha - AI/ML Developer Portfolio",
+      },
+    ],
+    siteName: "Utsab Sinha - AI/ML Developer",
   },
   twitter: {
     card: "summary_large_image",
     title: "Utsab Sinha — AI/ML Developer",
     description:
       "AI/ML developer building intelligent systems across NLP, computer vision, generative AI, and data intelligence.",
+    images: [`${baseUrl}/api/og`],
   },
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
@@ -46,34 +61,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const themeScript = `
-    (function() {
-      try {
-        var stored = localStorage.getItem('portfolio-theme');
-        var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var isDark = stored === 'dark' || (!stored && supportDarkMode) || (stored === 'system' && supportDarkMode);
-        var root = document.documentElement;
-        if (isDark) {
-          root.classList.add('dark');
-          root.classList.remove('light');
-          root.setAttribute('data-theme', 'dark');
-        } else {
-          root.classList.add('light');
-          root.classList.remove('dark');
-          root.setAttribute('data-theme', 'light');
-        }
-      } catch (e) {}
-    })();
-  `;
-
   return (
-    <html lang="en" className={`${inter.variable} ${jbmono.variable}`} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className="bg-app text-ink antialiased custom-cursor">
+    <html
+      lang="en"
+      className={`${inter.variable} ${jbmono.variable}`}
+      suppressHydrationWarning
+    >
+      <head />
+      <body className="bg-app text-ink antialiased relative">
         <ThemeProvider>
+          <InitialLoader />
           <CustomCursor />
+          <AnimeFloatingParticles />
           {children}
         </ThemeProvider>
       </body>

@@ -426,6 +426,8 @@ export type ExperienceItem = {
   year: string;
   description: string;
   accent: string;
+  skills?: string[];
+  badge?: string;
 };
 
 export const experience: ExperienceItem[] = [
@@ -437,7 +439,20 @@ export const experience: ExperienceItem[] = [
     year: "2026",
     description:
       "Working on the ML layer of the product – embeddings, clustering, and intent classification – to power search and recommendation features beyond API-level integration. Collaborating with the product team to translate model outputs into user-facing insights.",
-    accent: "#06B6D4",
+    accent: "#F59E0B",
+    skills: ["Embeddings", "Clustering", "Intent Classification", "RAG", "FastAPI"],
+  },
+  {
+    id: "techfest-iitb",
+    title: "College Ambassador",
+    org: "Techfest — Indian Institute of Technology (IIT), Bombay",
+    period: "Issued May 2026",
+    year: "2026",
+    description:
+      "Recognized as College Ambassador for Techfest, IIT Bombay (Asia's Largest Science & Technology Festival). Spearheaded campus student outreach, technical event promotion, digital branding, web design, and graphic design initiatives, securing a distinguished Certificate of Appreciation with a rank under 1500.",
+    accent: "#F97316",
+    skills: ["Web Design", "Graphic Design", "Brand Outreach", "Event Coordination"],
+    badge: "Rank < 1500 · Certificate of Appreciation",
   },
   {
     id: "twidix",
@@ -506,6 +521,11 @@ export const education = [
 ];
 
 export const certifications = [
+  {
+    name: "Certificate of Appreciation — Techfest Ambassador (Rank < 1500)",
+    issuer: "Indian Institute of Technology (IIT), Bombay",
+    year: "2026",
+  },
   {
     name: "Data Analytics Virtual Internship",
     issuer: "Deloitte",

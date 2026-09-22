@@ -42,7 +42,7 @@ export default function Process() {
               — 05 · METHODOLOGY
             </span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-[-0.03em] leading-[0.95] text-[var(--ink)]">
+          <h2 className="fluid-heading-section font-semibold tracking-[-0.03em] text-[var(--ink)]">
             HOW I BUILD{" "}
             <span className="text-primary-gradient">AI</span>
           </h2>
@@ -62,14 +62,14 @@ export default function Process() {
                     isActive
                       ? "border-[var(--border-accent)] bg-[var(--surface-elevated)] scale-100 shadow-lg"
                       : isDone
-                      ? "border-cyan-500/20 bg-cyan-500/5"
+                      ? "border-amber-500/30 bg-amber-500/10"
                       : "border-[var(--border)] bg-[var(--surface)] scale-95"
                   }`}
                   style={
                     isActive
                       ? {
                           boxShadow:
-                            "0 0 40px -10px rgba(139,92,246,0.3)",
+                            "0 0 40px -10px rgba(245,158,11,0.35)",
                         }
                       : {}
                   }
@@ -79,7 +79,7 @@ export default function Process() {
                       isActive
                         ? "text-primary-gradient"
                         : isDone
-                        ? "text-cyan-500 font-medium"
+                        ? "text-[var(--color-gold-accent)] font-medium"
                         : "text-[var(--ink-3)]"
                     }`}
                   >
@@ -91,7 +91,7 @@ export default function Process() {
                   {isActive && (
                     <motion.div
                       layoutId="process-dot"
-                      className="absolute -bottom-1.5 w-1.5 h-1.5 rounded-full bg-cyan-500"
+                      className="absolute -bottom-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-orange-accent)] shadow-[0_0_8px_#F97316]"
                     />
                   )}
                 </div>
